@@ -66,6 +66,11 @@ public class PokedexController {
 
     }
 
+    @DeleteMapping
+    public Mono<Void> deleteAllPokemons(){
+      return repository.deleteAll();
+    }
+
 
 
 }
