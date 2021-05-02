@@ -4,6 +4,7 @@ import com.github.marcelomachadoxd.pokedex.model.Pokemon;
 import com.github.marcelomachadoxd.pokedex.repository.PokedexRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -50,6 +51,19 @@ public class PokedexController {
             }
         ).map(updatePokemon -> ResponseEntity.ok(updatePokemon))
             .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public Mono<ResponseEntity<Void>> deletePokemon(@PathVariable(value = "id")
+                                                    String id){
+
+        return repository.findById(id)
+            .flatMap(existingPokemon ->
+                repository.delete(existingPokemon)
+                .then(Mono.just(ResponseEntity.ok().<Void>build()))
+                .defaultIfEmpty(ResponseEntity.notFound().build())
+            );
+
     }
 
 
