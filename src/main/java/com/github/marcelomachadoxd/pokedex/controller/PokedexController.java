@@ -1,13 +1,17 @@
 package com.github.marcelomachadoxd.pokedex.controller;
 
 import com.github.marcelomachadoxd.pokedex.model.Pokemon;
+import com.github.marcelomachadoxd.pokedex.model.PokemonEvent;
 import com.github.marcelomachadoxd.pokedex.repository.PokedexRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.Duration;
 
 @RestController
 @RequestMapping("/api/v1/pokemons")
@@ -69,6 +73,14 @@ public class PokedexController {
     @DeleteMapping
     public Mono<Void> deleteAllPokemons(){
       return repository.deleteAll();
+    }
+
+    @GetMapping(value = "/events", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<PokemonEvent> getPokemonEvents(){
+        return Flux.interval(Duration.ofSeconds(5))
+            .map(val ->
+                new PokemonEvent(val,"Evento de Pokemon")
+            );
     }
 
 
