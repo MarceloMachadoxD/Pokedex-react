@@ -36,5 +36,22 @@ public class PokedexController {
         return repository.save(pokemon);
     }
 
+    @PutMapping("/{id}")
+    public Mono<ResponseEntity<Pokemon>> updatePokemon(@PathVariable(value = "id")
+                                                       String id,
+                                                       @RequestBody Pokemon pokemon){
+        return repository.findById(id)
+            .flatMap(existingPokemon -> {
+            existingPokemon.setNome(pokemon.getNome());
+            existingPokemon.setCategoria(pokemon.getCategoria());
+            existingPokemon.setPeso(pokemon.getPeso());
+            return repository.save(existingPokemon);
+
+            }
+        ).map(updatePokemon -> ResponseEntity.ok(updatePokemon))
+            .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+
 
 }
