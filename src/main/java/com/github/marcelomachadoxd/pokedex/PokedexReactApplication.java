@@ -30,10 +30,7 @@ public class PokedexReactApplication {
             pokeFlux
                 .thenMany(repository.findAll())
                 .subscribe(System.out::println);
-
-
-
-        }
+        };
 
     }
 }
